@@ -13,12 +13,14 @@
   <style>
     :root{
       --accent:#2d559b;
+      --accent-2:#1f9a73;
       --muted:#6b7280;
       --bg:#ffffff;
       --card:#fbfbff;
       --radius:12px;
-      --maxw:1000px;
+      --maxw:1100px;
       --gap:18px;
+      --glass: rgba(255,255,255,0.6);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -33,6 +35,7 @@
       padding:24px;
       display:flex;
       justify-content:center;
+      transition:background .25s ease;
     }
     .wrap{
       width:100%;
@@ -42,24 +45,29 @@
       box-shadow:0 10px 30px rgba(18,38,77,0.06);
       padding:28px;
       margin:12px;
+      overflow:hidden;
     }
 
     header{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
     .avatar{
-      min-width:88px;height:88px;border-radius:12px;background:linear-gradient(180deg,var(--accent),#356fc1);
+      min-width:88px;height:88px;border-radius:12px;
       display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:28px;
-      box-shadow:0 6px 18px rgba(45,85,155,0.12)
+      box-shadow:0 6px 18px rgba(45,85,155,0.12);
+      overflow:hidden;
+      flex-shrink:0;
     }
+    .avatar img{width:88px;height:88px;object-fit:cover;border-radius:12px;display:block}
     .meta{flex:1;min-width:220px}
     .name{font-size:20px;font-weight:700;margin:0}
     .role{margin:6px 0;color:var(--muted);font-weight:600;font-size:13px}
     .contacts{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:13px;color:var(--muted)}
     .pill{background:#f3f6ff;color:var(--accent);padding:6px 10px;border-radius:999px;font-weight:600;font-size:12px}
 
-    .grid{display:grid;grid-template-columns:1fr 340px;gap:var(--gap);margin-top:22px}
-    @media (max-width:880px){ .grid{grid-template-columns:1fr; } .avatar{min-width:64px;height:64px;font-size:20px} }
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:var(--gap);margin-top:22px}
+    @media (max-width:920px){ .grid{grid-template-columns:1fr; } .avatar{min-width:64px;height:64px} }
 
-    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(16,24,40,0.02)}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(16,24,40,0.02);opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
+    .card.revealed{opacity:1;transform:none}
     h2{margin:0 0 8px 0;font-size:15px;color:var(--accent)}
     p.lead{margin:6px 0 0 0;color:#0b1220}
     .muted{color:var(--muted);font-size:13px}
@@ -80,6 +88,7 @@
       display:inline-block;background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700;
       box-shadow:0 6px 18px rgba(45,85,155,0.12)
     }
+    .cv-btn.secondary{background:var(--accent-2)}
 
     footer{display:flex;justify-content:space-between;gap:12px;align-items:center;padding-top:10px;border-top:1px solid #f0f3fb;margin-top:14px}
     .contact-actions{display:flex;gap:8px;align-items:center}
@@ -92,17 +101,40 @@
       box-shadow:0 2px 6px rgba(45,85,155,0.18);
     }
 
+    /* Projects gallery */
+    .projects-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    @media (max-width:760px){ .projects-grid{grid-template-columns:1fr} }
+    .project-card{
+      border-radius:12px;padding:14px;background:#fff;border:1px solid #f0f3fb;box-shadow:0 8px 20px rgba(20,30,60,0.04);
+      transition:transform .28s ease,box-shadow .28s ease; cursor:default;
+    }
+    .project-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(20,30,60,0.08)}
+    .project-title{font-weight:700;color:#0f172a;margin:0 0 6px 0}
+    .project-sub{color:var(--muted);font-size:13px;margin-bottom:8px}
+
+    .tag{display:inline-block;background:#fbfbff;border:1px solid #eef5ff;color:var(--accent);padding:6px 8px;border-radius:999px;font-weight:700;font-size:12px;margin-right:6px;margin-top:6px}
+
     /* small screens */
     @media (max-width:520px){
       .contacts{font-size:12px}
       .skill{font-size:12px;padding:6px 8px}
     }
+
+    /* small helpers for subtle svg icons */
+    .icon{width:14px;height:14px;vertical-align:middle;margin-right:6px;opacity:0.9}
+
+    /* subtle accessibility focus */
+    a:focus{outline:3px solid rgba(45,85,155,0.18);outline-offset:2px;border-radius:6px}
   </style>
 </head>
 <body>
   <main class="wrap" role="main" aria-labelledby="main-heading">
     <header>
-      <div class="avatar" aria-hidden="true">GK</div>
+      <div class="avatar" aria-hidden="true">
+        <!-- Replace photocv.jpg.png in repo for your real photo -->
+        <img src="photocv.jpg.png" alt="Goutham Das photograph" onerror="this.style.display='block'; this.parentElement.innerHTML = '<div style=&quot;width:88px;height:88px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--accent),#356fc1);color:#fff;border-radius:12px;font-weight:700;font-size:28px&quot;>GK</div>'">
+      </div>
+
       <div class="meta">
         <h1 id="main-heading" class="name">GOUTHAM DAS K</h1>
         <div class="role">B.Tech (Electronics & Biomedical) — Aspiring Biomedical Service / Field / Product Engineer</div>
@@ -116,7 +148,7 @@
 
       <div style="margin-left:auto;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
         <a class="cv-btn" href="Goutham_CV_ATS.pdf" download>Download CV (PDF)</a>
-        <a class="cv-btn" href="Goutham_Modern_CV.docx" download style="background:#1f9a73;margin-top:6px">Download DOCX</a>
+        <a class="cv-btn secondary" href="Goutham_Modern_CV.docx" download>Download DOCX</a>
       </div>
     </header>
 
@@ -180,15 +212,39 @@
 
         <!-- Project -->
         <section class="card" aria-labelledby="project-title" style="margin-top:14px">
-          <h2 id="project-title">Key Project</h2>
-          <div class="item-title">Real-Time Stress Detection & Management System</div>
-          <div class="item-sub">Jan 2025 – Apr 2025 — Role: Lead Developer (Hardware & Software)</div>
-          <ul class="bullets">
-            <li>Wearable prototype integrating MAX30102 (HR/SpO₂), AD8232 (ECG), Grove GSR, FSR402 (respiration), DHT22 (temp).</li>
-            <li>ESP32-based data acquisition, filtering, threshold-based stress classification (normal/moderate/high).</li>
-            <li>Standalone alerts & feedback: OLED display, LED indicators, vibration, DFPlayer audio, GSM alerts (SIM800L).</li>
-            <li>Power & hardware design: dual 18650 Li-ion battery, TP4056 charging, XL6009 boost converter. Prototype ~80% complete.</li>
-          </ul>
+          <h2 id="project-title">Projects</h2>
+
+          <!-- Projects gallery (2 cards) -->
+          <div class="projects-grid">
+            <article class="project-card" aria-labelledby="proj1">
+              <h3 id="proj1" class="project-title">Real-Time Stress Detection & Management System</h3>
+              <div class="project-sub">Jan 2025 – Apr 2025 — Lead Developer (Hardware & Software)</div>
+              <p style="margin-top:8px;color:#0b1220;font-size:14px">
+                Wearable prototype integrating MAX30102 (HR/SpO₂), AD8232 (ECG), Grove GSR, FSR402 (respiration), DHT22 (temp).
+                ESP32-based acquisition, filtering, and threshold-based stress classification. Standalone feedback: OLED, LED indicators,
+                vibration, DFPlayer audio, and GSM alerts (SIM800L). Power design with dual 18650, TP4056 charger, XL6009 boost converter.
+              </p>
+              <div style="margin-top:10px">
+                <span class="tag">ESP32</span>
+                <span class="tag">Biosensors</span>
+                <span class="tag">Power Design</span>
+              </div>
+            </article>
+
+            <article class="project-card" aria-labelledby="proj2">
+              <h3 id="proj2" class="project-title">Project — Placeholder (Expandable)</h3>
+              <div class="project-sub">Add another mini project or internship outcome here</div>
+              <p style="margin-top:8px;color:#0b1220;font-size:14px">
+                Use this card to highlight a short project, course assignment, or a hardware prototype. Replace this placeholder
+                with project title, short description, tech stack, and key contribution.
+              </p>
+              <div style="margin-top:10px">
+                <span class="tag">Placeholder</span>
+                <span class="tag">Microcontroller</span>
+              </div>
+            </article>
+          </div>
+
         </section>
 
         <!-- Education -->
@@ -273,8 +329,31 @@
   </main>
 
   <script>
-    // small script: set current year
+    // current year
     document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // on-scroll reveal (smooth & professional)
+    function revealOnScroll() {
+      const items = document.querySelectorAll('.card, .project-card');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            // optional: unobserve for performance
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      items.forEach(i => observer.observe(i));
+    }
+    revealOnScroll();
+
+    // subtle hover focus for project cards for keyboard users
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') card.click();
+      });
+    });
   </script>
 </body>
 </html>
